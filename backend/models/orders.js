@@ -8,6 +8,7 @@ const orderSchema = new mongoose.Schema({
   email: { type: String, required: true },
   totalCost: { type: Number, required: true },
   date: { type: Date, default: Date.now },
+  sessionId: String,
 });
 
 // Create a model for orders using the schema

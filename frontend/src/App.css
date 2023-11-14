@@ -281,25 +281,39 @@ button[type="submit"] {
 
 
 
-/*THANKYOU*/
+/* THANKYOU */
 
 .thankyou-container {
     display: flex;
     flex-direction: column;
+    align-items: center; /* Center items horizontally */
+    justify-content: center;
     margin-top: 4em;
     text-align: center;
-    width: 70%;
-}
-
-.payment-info-container {
-    display: flex;
-    flex-direction: column;
-    margin-top: 4em;
-    text-align: center;
+    width: 80%;
+  }
+  
+  .order-info-container,
+  .payment-info-container {
+    width: 100%; /* Adjust width as needed */
+  }
+  
+  .order-info-container ul,
+  .payment-info-container ul {
+    list-style-type: none; /* Remove list item bullets */
+    padding: 0; /* Remove default padding for lists */
+  }
+  
+  .order-info-container {
+    margin-bottom: 2em; /* Adjust spacing between containers if needed */
+  }
+  
+  .payment-info-container {
+    margin-top: 2em;
     margin-bottom: 10em;
-    width: 70%;
-
-}
+    text-align: center;
+  }
+  
 
 
 /*HOME PAGE */

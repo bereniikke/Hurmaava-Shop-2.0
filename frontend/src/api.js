@@ -5,9 +5,9 @@ const api = axios.create({
   baseURL: 'http://localhost:3002',
 });
 
-export const getOrders = async () => {
+export const getOrders = async (sessionId) => {
   try {
-    const response = await api.get('/orders');
+    const response = await api.get(`/orders?sessionId=${sessionId}`);
     return response.data;
   } catch (error) {
     console.error('Error getting orders:', error);
@@ -37,6 +37,15 @@ export const submitOrder = async (orderData) => {
       // Something happened in setting up the request that triggered an Error
       console.error('Error', error.message);
     }
+    throw error;
+  }
+};
+export const getUser = async (userId) => {
+  try {
+    const response = await api.get(`/users/${userId}`);
+    return response.data;
+  } catch (error) {
+    console.error(`Error getting user with ID ${userId}:`, error);
     throw error;
   }
 };

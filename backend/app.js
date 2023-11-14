@@ -25,26 +25,30 @@ app.use(cors({
 }));
 
 // Middleware to parse form data
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.json());
 
 // Serve static files from the frontend/public directory
 app.use(express.static('../frontend/public'));
 
 // Define a route to retrieve orders
 app.get('/orders', async (req, res) => {
-    try {
-        const db = mongoose.connection; // Use the Mongoose connection
-
-        // Query the "orders" collection
-        const orders = await db.collection('orders').find().toArray();
-
-        // Send the orders as a JSON response
-        res.status(200).json(orders);
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: 'Could not fetch the documents' });
+  try {
+    const db = mongoose.connection;
+    const currentSessionId = req.query.sessionId;
+    
+    if (!currentSessionId) {
+      return res.status(400).json({ error: 'Session ID is required' });
     }
+
+    const orders = await db.collection('orders').find({ sessionId: currentSessionId }).toArray();
+
+    res.status(200).json(orders);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Could not fetch the documents' });
+  }
 });
+
 
 // Function to calculate product price
 function calculateProductPrice(productType) {
@@ -70,7 +74,6 @@ function calculateFabricPrice(fabric) {
   return fabricPrices[fabric] || 0;
 }
 
-
 app.post(
   '/submit-order',
   [
@@ -95,6 +98,9 @@ app.post(
       const shippingCost = 6.90;
       const totalCost = productPrice + fabricPrice + shippingCost;
 
+      // Include sessionId in the order data
+      const { sessionId } = req.body;
+
       // Create a new Order instance and save all details to the database
       const newOrder = new Order({
         productType,
@@ -103,11 +109,12 @@ app.post(
         email,
         totalCost,
         date: Date.now(),
+        sessionId,
       });
 
       const savedOrder = await newOrder.save();
 
-      // Send an HTML response to the user
+      // Send a JSON response to the user
       const orderDetails = {
         productType: savedOrder.productType,
         fabric: savedOrder.fabric,
@@ -116,22 +123,15 @@ app.post(
         totalCost,
       };
 
-      // Read the HTML template and replace placeholders with order details
-      const fs = require('fs');
-      const htmlTemplate = fs.readFileSync('../frontend/public/thankyou.html', 'utf8');
-      const formattedHTML = htmlTemplate.replace(/{productType}/g, orderDetails.productType)
-        .replace(/{fabric}/g, orderDetails.fabric)
-        .replace(/{phoneNumber}/g, orderDetails.phoneNumber)
-        .replace(/{email}/g, orderDetails.email)
-        .replace(/{totalCost}/g, orderDetails.totalCost);
-
-      res.status(201).send(formattedHTML);
+      res.status(201).json({ order: orderDetails, message: 'Order submitted successfully' });
     } catch (error) {
       console.error(error);
       res.status(500).json({ error: 'Could not save the order' });
     }
   }
 );
+
+
 
   
 
