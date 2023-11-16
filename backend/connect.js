@@ -1,6 +1,7 @@
 const { MongoClient } = require('mongodb');
+const env = require('../env');
 
-const url = "mongodb+srv://lauraelfving:30lXJEEtUx1lt37B@orders.tugrgb1.mongodb.net/?retryWrites=true&w=majority";
+const url = env.MONGODB_URI;
 
 async function run() {
   const client = new MongoClient(url);

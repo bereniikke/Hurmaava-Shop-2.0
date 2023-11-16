@@ -12,7 +12,8 @@ function Header() {
         <ul>
           <li><Link to="/home">Koti</Link></li> 
           <li><Link to="/">Kauppa</Link></li> 
-          <li><Link to="/contact">Ota yhteyttä</Link></li> 
+          <li><Link to="/contact">Ota yhteyttä</Link></li>
+          <li><Link to="/loginform">Kirjaudu sisään</Link></li> 
         </ul>
       </nav>
     </header>
