@@ -63,7 +63,6 @@ module.exports = {
     ADMIN_PASSWORD: 'your-password-here',
   };
   
-};
 ```
 
 
